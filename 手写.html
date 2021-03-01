@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //  1.  阐述构造函数、prototype、实例 的__proto__的三角关系
+        function Person(name){
+            this.name = name
+        }
+        const a = new Person('zhangsan')
+        // console.log(Person.prototype)
+        // console.log(Person === a.__proto__.constructor)
+
+        //  2. 手写一个apply、call、bind
+        function test(code){
+            console.log('test', this, code)
+            return 123
+        }
+        // test()
+        // test.call(a, )
+        Function.prototype.myapply = function(){
+            if(typeof this !== 'function'){
+                throw new TypeError('类型错误')
+                return
+            }
+            const args = [...arguments]
+            const context = args[0] || window
+            const key =  Symbol('fn')
+            context[key] = this
+            const res = context[key](args.slice(1))
+            return res
+        }
+        Function.prototype.mybind = function (){
+            if(typeof this !== 'function'){
+                throw new TypeError('11')
+                return
+            }
+            const args = [...arguments]
+
+            const ctx = args[0] || window
+            const key = Symbol('fn')
+            ctx[key] = this
+            return function () {
+                ctx[key](...arguments)
+                delete ctx[key]
+            }
+        }
+        // test.mybind(a)([1,2,2])
+
+        // 3. 手写reduce
+        const arr = [1,2,3]
+        arr.reduce((pre, cur) => {
+            console.log(pre, cur)
+        })
+        Array.prototype.myreduce = function (fn, prev){
+            if(!Array.isArray(this) || typeof fn !== 'function'){
+                throw new TypeError('wqwq')
+                return
+            }
+            this.map((it, index) => {
+                if( typeof prev === 'undefined'){
+                    prev = fn(it, this[index+1], index +1, this)
+                } else {
+                    prev = fn(prev, this[index], index, this)
+                }
+            })
+            return prev
+        }
+        //  4. 手写继承
+        // (1)原型链继承
+        function A(name){
+            this.name = anme
+        }
+        function B(){
+
+        }
+        B.prototype = new A();
+        // (2)借用构造函数继承 借调
+        function C(){
+            A.call(this, 'ass')
+        }
+        //  (3)组合式继承 原型+借调
+        function D(){
+            A.call(this, 'lee')
+        }
+        D.prototype = new A()
+        // (4)  原型式继承
+
+        function E(){
+            function F(){
+                
+            }
+            F.prototype = obj
+            return new F()
+        }
+        // （5） 寄生式继承 
+        // (6)  寄生组合式继承（常用）
+
+    </script>
+</body>
+</html>
