@@ -74,7 +74,7 @@
         //  4. 手写继承
         // (1)原型链继承
         function A(name){
-            this.name = anme
+            this.name = name
         }
         function B(){
 
@@ -100,7 +100,43 @@
         }
         // （5） 寄生式继承 
         // (6)  寄生组合式继承（常用）
+        
+        // 5  闭包是什么？ 闭包能做什么事情，优点和缺点 手写一个闭包
+        function fn1(){
+            let a = 1
+            function fn2 (){
+                return a + 1
+            }
+            return fn2
+        }
+        //  console.log(fn1()())
 
+
+        //  6 手写 防抖 节流
+        // 防抖 的案例 频繁的点击登陆
+       
+        function debunce(fn, delay){
+            let timer = null;
+            return function (e){
+                clearInterval(timer)
+                timer = setTimeout(() => {
+                    fn.call(this, ...arguments)
+                }, delay);
+            }
+        }
+         //  节流  对于频率较高的情况 用来稀释频率
+
+        function throttle(fn, delay){
+            let isDone = false
+            return function(){
+                if(!isDone) return
+                setTimeout(() => {
+                   fn.apply(this, arguments) 
+                   isDone = true
+                }, delay);
+            }
+        }
+        
     </script>
 </body>
 </html>
