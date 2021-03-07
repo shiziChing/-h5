@@ -18,7 +18,7 @@
 
         //  2. 手写一个apply、call、bind
         function test(code){
-            console.log('test', this, code)
+            // console.log('test', this, code)
             return 123
         }
         // test()
@@ -55,7 +55,7 @@
         // 3. 手写reduce
         const arr = [1,2,3]
         arr.reduce((pre, cur) => {
-            console.log(pre, cur)
+            // console.log(pre, cur)
         })
         Array.prototype.myreduce = function (fn, prev){
             if(!Array.isArray(this) || typeof fn !== 'function'){
@@ -137,6 +137,153 @@
             }
         }
         
+        //  写一个 eventEmitter
+        class eventEmitter{
+            constructor (){
+                this.fns = {}
+            }
+            on(eName, fn){
+                if(!this.fns[eName]){
+                    this.fns[eName] = [fn]
+                }else {
+                    this.fns[eName].push(fn)
+                }
+            }
+            emit(ename, ...rest){
+                this.fns[ename].map(it => it.apply(this, rest))
+            }
+            remove(ename, fn){
+                this.fns[ename] = this.fns[ename].filter(it => it !== fn)
+            }
+            once(ename, fn){
+                const temp = () => {
+                    fn()
+                    this.remove(ename, temp)
+                }
+                this.on(ename, temp)
+            }
+        }
+        const eventobj = new eventEmitter()
+        function testfn(){
+            console.log('tentfn')
+        }
+        // eventobj.once('click', testfn)
+        // eventobj.emit('click')
+        // setTimeout(() => {
+        //     console.log('3000')
+        //     eventobj.emit('click')
+        // }, 3000);
+        //  算法  大整数加法
+        function addfn(a, b){
+            let i = a.length - 1, j = b.length - 1; ret = '', carry = 0;
+            while(i >= 0 || j >= 0){
+                let x = 0, y = 0, sum = 0;
+                if(i >= 0){
+                    x = a[i] - '0'
+                    i --;
+                }
+                if(j >= 0){
+                    y = b[j] - '0'
+                    j --;
+                }
+                sum = x + y + carry
+                if(sum >= 10){
+                    sum -=10
+                    carry = 1
+                } else carry = 0
+                ret = sum + ret
+            }
+            if(carry){
+                ret = carry + ret
+            }
+            return ret
+        }
+        console.log(addfn('1999999999999', '1'))
+
+        class eventEmitter1{
+            constructor(){
+                this.fns = {
+
+                }
+            }
+            on(name, fn){
+                if(this.fns[name]){
+                    this.fns[name].push(fn)
+                }else {
+                    this.fns[name] = [fn]
+                }
+            }
+            emit(name, ...rest){
+                if(this.fns[name]){
+                    this.fns[name].map(it => it.apply(this, rest))
+                }
+            }
+            remove(name, fn){
+                if(this.fns[name]){
+                    this.fns[name] = this.fns[name].filter(it => it !== fn)
+                }
+            }
+            once(name, fn){
+                const func = () => {
+                    fn()
+                    this.remove(name, func)
+                }
+                this.on(name, func)
+            }
+        }
+
+        //  遍历二叉树
+        const tree = {
+            value: "-",
+            left: {
+                value: '+',
+                left: {
+                    value: 'a',
+                },
+                right: {
+                    value: '*',
+                    left: {
+                        value: 'b',
+                    },
+                    right: {
+                        value: 'c',
+                    }
+                }
+            },
+            right: {
+                value: '/',
+                left: {
+                    value: 'd',
+                },
+                right: {
+                    value: 'e',
+                }
+            }
+        }
+        const rest = []
+        // function readTree(tree){
+        //     console.log(tree)
+        //     // rest.push(tree.value)
+        //     if(tree.left) readTree(tree.left)
+        //     rest.push(tree.value)
+        //     if(tree.right) readTree(tree.right)
+        // }
+        
+        function readTree(tree){
+            const stack = [tree]
+            while(stack.length){
+                const node = stack.pop()
+                rest.push(node.value)
+                if(node.left) {
+                    stack.push(node.left)
+                }
+                if(node.right){
+                    stack.push(node.right)
+                }
+            }
+        }
+readTree(tree)
+        console.log(rest)
     </script>
 </body>
 </html>
