@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function sleep(delay){
+            for(var ts = Date.now();Date.now()-ts<=delay;){}
+        }
+        const works = [
+            ()=>{
+                console.log('任务1 start');
+                sleep(20);
+                console.log('任务1 end');
+            },
+            ()=>{
+                console.log('任务2 start');
+                sleep(20);
+                console.log('任务2 end');
+            },
+            ()=>{
+                console.log('任务3 start');
+                sleep(20);
+                console.log('任务3 end');
+            }
+        ]
+        requestIdleCallback(workLoop);
+        //刚才
+        function workLoop(deadline){
+            console.log(`本帧的剩余时间是${parseInt(deadline.timeRemaining())}`);
+            while((deadline.timeRemaining()>1) && works.length>0){
+                performUnitOfWork();    
+            }
+            //如果本帧没有剩余时间了，或者任务已经 全干完了
+            if(works.length>0){///如果说还工作要干，则说明任务还没干活，
+                requestIdleCallback(workLoop);
+            }
+            ///workLoop的退出代表让出控制权
+        }
+        function performUnitOfWork(){
+            let work = works.shift();//取出数组的第一个元素
+            work();
+        }
+    </script>
+</body>
+</html>

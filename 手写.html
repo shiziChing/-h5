@@ -261,13 +261,13 @@
             }
         }
         const rest = []
-        // function readTree(tree){
-        //     console.log(tree)
-        //     // rest.push(tree.value)
-        //     if(tree.left) readTree(tree.left)
-        //     rest.push(tree.value)
-        //     if(tree.right) readTree(tree.right)
-        // }
+        function readTree(tree){
+            console.log(tree)
+            // rest.push(tree.value)
+            if(tree.left) readTree(tree.left)
+            rest.push(tree.value)
+            if(tree.right) readTree(tree.right)
+        }
         
         function readTree(tree){
             const stack = [tree]
@@ -282,8 +282,34 @@
                 }
             }
         }
-readTree(tree)
-        console.log(rest)
+        // readTree(tree)
+        // console.log(rest)
+
+        // 算法
+        const getsumMaxArr = [1,2, 4, 3, 1, 2];
+        function getsumMax(arr){
+            const rest = []
+            let sum = 0;
+            // for(let i = 0; i < arr.length - 1; i++ ){
+
+            // }
+            arr.map((it, index) => {
+                
+                let next = arr[index + 1] || 0;
+                sum  = sum + it;
+                if(it > next){
+                    rest.push(sum);
+                    sum = 0;
+                }
+            })
+            console.log('rest---->', rest)
+            return Math.max(...rest)
+        }
+        // const res1 = getsumMax(getsumMaxArr)
+        // console.log('res1------->', res1)
+        
+        
     </script>
+    <script src="./promise.js"></script>
 </body>
 </html>
